@@ -1,10 +1,11 @@
+# backend/api/routes.py
+
 from fastapi import APIRouter
 from pydantic import BaseModel
 from backend.core.ai_client import get_ai_verdict
 from backend.core.game_logic import GameSession
 from backend.core.moderation import is_clean
 from backend.db.mongo import increment_guess_count, get_guess_count
-# from backend.core.cache import get_cached_verdict, set_cached_verdict ❌ Disabled Redis
 
 router = APIRouter()
 sessions = {}
@@ -23,9 +24,13 @@ async def guess_word(req: GuessRequest):
     game = sessions.setdefault(req.session_id, GameSession(seed=req.seed))
 
     if req.guess in game.values:
-        return {"verdict": "Game Over! Duplicate guess.", "score": game.score, "history": game.history()}
+        return {
+            "verdict": "Game Over! Duplicate guess.",
+            "score": game.score,
+            "history": game.history()
+        }
 
-    # Skip Redis cache, go directly to Gemini
+    # Use only Gemini verdict (no Redis caching!)
     verdict = await get_ai_verdict(req.seed, req.guess, req.persona)
 
     if verdict == "yes":
@@ -40,4 +45,8 @@ async def guess_word(req: GuessRequest):
             "next_seed": req.guess
         }
 
-    return {"verdict": f"❌ '{req.guess}' does not beat '{req.seed}'.", "score": game.score, "history": game.history()}
+    return {
+        "verdict": f"❌ '{req.guess}' does not beat '{req.seed}'.",
+        "score": game.score,
+        "history": game.history()
+    }
