@@ -9,6 +9,7 @@ const BACKEND_URL = "https://genai-backend-tp1g.onrender.com/guess";
 
 
 
+
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
