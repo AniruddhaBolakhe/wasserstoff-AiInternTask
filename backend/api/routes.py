@@ -31,7 +31,8 @@ async def guess_word(req: GuessRequest):
         }
 
     # Use only Gemini verdict (no Redis caching!)
-    verdict = await get_ai_verdict(req.seed, req.guess, req.persona)
+    verdict = get_ai_verdict(req.seed, req.guess, req.persona)
+
 
     if verdict == "yes":
         game.guess(req.guess)
