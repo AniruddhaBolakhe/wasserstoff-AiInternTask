@@ -6,10 +6,6 @@ const restartButton = document.getElementById('restartButton');
 
 const BACKEND_URL = "https://genai-backend-tp1g.onrender.com/guess";
 
-
-
-
-
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -33,13 +29,20 @@ form.addEventListener('submit', async (e) => {
     const data = await response.json();
     console.log(data);
 
-    resultDiv.innerHTML = `<h3>Result: ${data.result}</h3>`;
+    // ✅ Show the Gemini response verdict
+    resultDiv.innerHTML = `<h3>${data.verdict}</h3>`;
+
+    // ✅ Score and guess history
     scoreDiv.innerHTML = `<h3>Score: ${data.score}</h3>`;
     historyDiv.innerHTML = `<h3>Guess History: ${data.history.join(", ")}</h3>`;
 
+    // ✅ Update the seed word field if a new one is given
     if (data.next_seed) {
       document.getElementById('seedWord').value = data.next_seed;
     }
+
+    // Clear guess input
+    document.getElementById('guess').value = '';
 
   } catch (error) {
     console.error('Error:', error);
@@ -52,4 +55,5 @@ restartButton.addEventListener('click', () => {
   resultDiv.innerHTML = '';
   scoreDiv.innerHTML = '';
   historyDiv.innerHTML = '';
+  document.getElementById('guess').value = '';
 });
