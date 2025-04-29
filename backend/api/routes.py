@@ -6,7 +6,7 @@ from backend.core.ai_client import get_ai_verdict
 from backend.core.game_logic import GameSession
 from backend.core.moderation import is_clean
 from backend.db.mongo import increment_guess_count, get_guess_count
-from backend.core.cache import get_cached_verdict, set_cached_verdict
+#from backend.core.cache import get_cached_verdict, set_cached_verdict
 
 router = APIRouter()
 sessions = {}
