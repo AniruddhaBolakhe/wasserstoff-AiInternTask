@@ -1,12 +1,10 @@
-# backend/api/routes.py
-
 from fastapi import APIRouter
 from pydantic import BaseModel
 from backend.core.ai_client import get_ai_verdict
 from backend.core.game_logic import GameSession
 from backend.core.moderation import is_clean
 from backend.db.mongo import increment_guess_count, get_guess_count
-#from backend.core.cache import get_cached_verdict, set_cached_verdict
+# from backend.core.cache import get_cached_verdict, set_cached_verdict ❌ Disabled Redis
 
 router = APIRouter()
 sessions = {}
@@ -27,13 +25,8 @@ async def guess_word(req: GuessRequest):
     if req.guess in game.values:
         return {"verdict": "Game Over! Duplicate guess.", "score": game.score, "history": game.history()}
 
-    # Check cache
-    cached = get_cached_verdict(req.seed, req.guess)
-    if cached:
-        verdict = cached
-    else:
-        verdict = await get_ai_verdict(req.seed, req.guess, req.persona)
-        set_cached_verdict(req.seed, req.guess, verdict)
+    # Skip Redis cache, go directly to Gemini
+    verdict = await get_ai_verdict(req.seed, req.guess, req.persona)
 
     if verdict == "yes":
         game.guess(req.guess)
