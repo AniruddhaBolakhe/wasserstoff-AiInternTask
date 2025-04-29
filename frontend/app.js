@@ -5,7 +5,8 @@ const historyDiv = document.getElementById('history');
 const restartButton = document.getElementById('restartButton');
 
 // ⚡️ Change this to your deployed backend URL later
-const BACKEND_URL = "https://your-backend-deployed-link/guess";
+const BACKEND_URL = "https://genai-backend-tp1g.onrender.com/guess";
+
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
