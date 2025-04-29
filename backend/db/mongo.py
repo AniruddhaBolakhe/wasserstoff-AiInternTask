@@ -1,6 +1,13 @@
+import os
 from pymongo import MongoClient
+from dotenv import load_dotenv
 
-db = MongoClient("mongodb://mongo:27017")["genai_game"]
+load_dotenv()
+
+mongo_uri = os.getenv("MONGO_URI")
+client = MongoClient(mongo_uri)
+
+db = client["genai_game"]
 guess_counter = db["guess_counts"]
 
 def increment_guess_count(word):
